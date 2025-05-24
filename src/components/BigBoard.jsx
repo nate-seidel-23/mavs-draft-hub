@@ -1,5 +1,6 @@
 // components/BigBoard.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState} from 'react';
+import { Link } from 'react-router-dom';
 import { Table, TableHead, TableBody, TableRow, TableCell, Avatar, Typography, Box, TableSortLabel, Divider} from '@mui/material';
 import { ArrowDropUp, ArrowDropDown } from '@mui/icons-material';
 import { mergePlayerData, getAverageRank } from '../utils/mergeData';
@@ -45,12 +46,7 @@ const BigBoard = () => {
   }, [order, orderBy]);
 
   return (
-    <Box sx={{ overflowX: 'auto'}}>
-      <Typography variant="h4" fontWeight="bold"  sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}>
-        NBA Draft Hub 2025
-      </Typography>
-      <Divider sx={{ mb: 2 }} />
-
+    <Box sx={{ overflowX: 'auto', px:{xs: 2, sm: 4, md: 6} }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -104,7 +100,9 @@ const BigBoard = () => {
               <TableCell>
                 <Box display="flex" alignItems="center">
                   <Avatar src={player.photoUrl} sx={{ width: 40, height: 40, mr: 1 }} />
-                  <Typography>{player.name}</Typography>
+                  <Link to={`/player/${player.playerId}`} style={{ textDecoration: 'none'}}>
+                    <Typography color="primary">{player.name}</Typography>
+                  </Link>
                 </Box>
               </TableCell>
               <TableCell>{formatHeight(player.height)}</TableCell>
