@@ -47,82 +47,84 @@ const BigBoard = () => {
 
   return (
     <Box sx={{ overflowX: 'auto', px:{xs: 2, sm: 4, md: 6} }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === 'averageRank'}
-                direction={orderBy === 'averageRank' ? order : 'asc'}
-                onClick={() => handleSort('averageRank')}>
-                Avg Rank
-              </TableSortLabel>
-            </TableCell>
-
-            <TableCell>Name</TableCell>
-
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === 'height'}
-                direction={orderBy === 'height' ? order : 'asc'}
-                onClick={() => handleSort('height')}>
-                Height
-              </TableSortLabel>
-            </TableCell>
-
-            <TableCell>
-              <TableSortLabel
-                active={orderBy === 'weight'}
-                direction={orderBy === 'weight' ? order : 'asc'}
-                onClick={() => handleSort('weight')}>
-                Weight
-              </TableSortLabel>
-            </TableCell>
-
-            {scoutList.map(scout => (
-              <TableCell key={scout}>
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
                 <TableSortLabel
-                  active={orderBy === scout}
-                  direction={orderBy === scout ? order : 'asc'}
-                  onClick={() => handleSort(scout)}>
-                  {scout}
+                  active={orderBy === 'averageRank'}
+                  direction={orderBy === 'averageRank' ? order : 'asc'}
+                  onClick={() => handleSort('averageRank')}>
+                  Avg Rank
                 </TableSortLabel>
               </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {players.map(player => (
-            <TableRow key={player.playerId}>
+
+              <TableCell>Name</TableCell>
+
               <TableCell>
-                <Typography fontWeight="bold">{player.averageRank.toFixed(1)}</Typography>
+                <TableSortLabel
+                  active={orderBy === 'height'}
+                  direction={orderBy === 'height' ? order : 'asc'}
+                  onClick={() => handleSort('height')}>
+                  Height
+                </TableSortLabel>
               </TableCell>
+
               <TableCell>
-                <Box display="flex" alignItems="center">
-                  <Avatar src={player.photoUrl} sx={{ width: 40, height: 40, mr: 1 }} />
-                  <Link to={`/player/${player.playerId}`} style={{ textDecoration: 'none'}}>
-                    <Typography color="primary">{player.name}</Typography>
-                  </Link>
-                </Box>
+                <TableSortLabel
+                  active={orderBy === 'weight'}
+                  direction={orderBy === 'weight' ? order : 'asc'}
+                  onClick={() => handleSort('weight')}>
+                  Weight
+                </TableSortLabel>
               </TableCell>
-              <TableCell>{formatHeight(player.height)}</TableCell>
-              <TableCell>{player.weight} lbs</TableCell>
-              {scoutList.map(scout => {
-                const rank = player.scoutRankings[scout];
-                const icon = getColorIcon(rank, player.averageRank);
-                return (
-                  <TableCell key={scout}>
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="body2">{rank ?? '—'}</Typography>
-                      {icon && <Box ml={0.5}>{icon}</Box>}
-                    </Box>
-                  </TableCell>
-                );
-              })}
+
+              {scoutList.map(scout => (
+                <TableCell key={scout}>
+                  <TableSortLabel
+                    active={orderBy === scout}
+                    direction={orderBy === scout ? order : 'asc'}
+                    onClick={() => handleSort(scout)}>
+                    {scout}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {players.map(player => (
+              <TableRow key={player.playerId}>
+                <TableCell>
+                  <Typography fontWeight="bold">{player.averageRank.toFixed(1)}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Box display="flex" alignItems="center">
+                    <Avatar src={player.photoUrl} sx={{ width: 40, height: 40, mr: 1 }} />
+                    <Link to={`/player/${player.playerId}`} style={{ textDecoration: 'none'}}>
+                      <Typography color="primary">{player.name}</Typography>
+                    </Link>
+                  </Box>
+                </TableCell>
+                <TableCell>{formatHeight(player.height)}</TableCell>
+                <TableCell>{player.weight} lbs</TableCell>
+                {scoutList.map(scout => {
+                  const rank = player.scoutRankings[scout];
+                  const icon = getColorIcon(rank, player.averageRank);
+                  return (
+                    <TableCell key={scout}>
+                      <Box display="flex" alignItems="center">
+                        <Typography variant="body2">{rank ?? '—'}</Typography>
+                        {icon && <Box ml={0.5}>{icon}</Box>}
+                      </Box>
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     </Box>
   );
 };

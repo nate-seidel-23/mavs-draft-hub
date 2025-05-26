@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Autocomplete, Paper, Box, Typography, Grid, TextField, MenuItem, Tabs, Tab, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { formatHeight } from '../utils/format';
 import data from '../data/intern_project_data.json';
 
 // Helper to get measurements for a player
@@ -76,21 +77,35 @@ const PlayerCompareCard = ({ player, compareTo, tab }) => {
         )}
         {tab === 2 && (
             <Box>
-            <Typography
-                variant="body2"
-                sx={{ color: getColor(measurements.heightNoShoes, compareMeasurements.heightNoShoes) }}
-            >
-                Height: {measurements.heightNoShoes ?? '—'}
-            </Typography>
-            <Typography
-                variant="body2"
-                sx={{ color: getColor(measurements.wingspan, compareMeasurements.wingspan) }}
-            >
-                Wingspan: {measurements.wingspan ?? '—'}
-            </Typography>
-            {/* Add more measurements as needed */}
-            </Box>
-        )}
+            {[
+                { label: 'Height (No Shoes)', key: 'heightNoShoes' },
+                { label: 'Height (With Shoes)', key: 'heightShoes' },
+                { label: 'Wingspan', key: 'wingspan' },
+                { label: 'Standing Reach', key: 'reach' },
+                { label: 'Weight', key: 'weight' },
+                { label: 'Body Fat %', key: 'bodyFat' },
+                { label: 'Hand Length', key: 'handLength' },
+                { label: 'Hand Width', key: 'handWidth' },
+                { label: 'Lane Agility', key: 'agility', higherIsBetter: false },
+                { label: 'Sprint', key: 'sprint', higherIsBetter: false },
+                { label: 'Shuttle Left', key: 'shuttleLeft', higherIsBetter: false },
+                { label: 'Shuttle Right', key: 'shuttleRight', higherIsBetter: false },
+                { label: 'Shuttle Best', key: 'shuttleBest', higherIsBetter: false },
+                { label: 'No Step Vertical', key: 'noStepVertical' },
+                { label: 'Max Vertical', key: 'maxVertical' }
+            ].map(({ label, key, higherIsBetter }) => (
+      <Typography
+        key={key}
+        variant="body2"
+        sx={{ color: getColor(measurements[key], compareMeasurements[key], higherIsBetter !== false) }}
+      >
+        {label}: {['heightNoShoes', 'heightShoes', 'wingspan', 'reach'].includes(key)
+          ? measurements[key] ? formatHeight(measurements[key]) : '—'
+          : measurements[key] ?? '—'}
+      </Typography>
+    ))}
+  </Box>
+)}
         </Box>
     );
 };
@@ -102,15 +117,15 @@ const Compare = ({ player }) => {
   const [search, setSearch] = useState('');
   const comparePlayer = otherPlayers.find(p => String(p.playerId) === String(compareId));
 
-  // Filter players by search
+  // Filter players to search
   const filteredPlayers = otherPlayers.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <Paper sx={{ p: 3, mt: 4, mx: 'auto'}}>
-        <Typography variant="h6" gutterBottom>Compare Players</Typography>
-        <Box mb={2} sx={{ maxWidth: 350 }}>
+    <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography variant="h6" gutterBottom>Compare With</Typography>
+        <Box mb={2} sx={{ maxWidth: 350, width: '100%' }}>
             <Autocomplete
                 options={filteredPlayers}
                 getOptionLabel={p => p.name}
@@ -151,13 +166,14 @@ const Compare = ({ player }) => {
             sx={{ mb: 2 }}
             variant="scrollable"
             scrollButtons="auto"
+            
         >
             <Tab label="Scout Ranks" />
             <Tab label="Stats" />
             <Tab label="Measurements" />
       </Tabs>
       {comparePlayer ? (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justifyContent="center">
           <Grid item xs={12} md={6}>
             <PlayerCompareCard player={player} compareTo={comparePlayer} tab={tab} />
           </Grid>
@@ -168,7 +184,7 @@ const Compare = ({ player }) => {
       ) : (
         <Typography variant="body2" color="textSecondary">Select a player to compare.</Typography>
       )}
-    </Paper>
+    </Box>
   );
 };
 

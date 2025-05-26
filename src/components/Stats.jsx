@@ -4,7 +4,16 @@ import data from '../data/intern_project_data.json';
 import { useParams } from 'react-router-dom';
 
 const SeasonLogTable = ({ logs }) => (
-  <Table size="small" sx={{ minWidth: 800 }}>
+  <Table
+    size="small"
+    sx={{
+      minWidth: 600,
+      '& .MuiTableCell-root': {
+        padding: { xs: '6px 6px', sm: '2px 4px' }, // more padding on xs, tight on sm+
+        fontSize: '0.95rem',
+      },
+    }}
+  >
     <TableHead>
       <TableRow>
         <TableCell>Season</TableCell>
@@ -90,7 +99,7 @@ const Stats = () => {
       );
 
   return (
-    <Paper sx={{ p: 3, mt: 4, mx: 5, overflowX: 'auto' }}>
+    <>
       <FormControl fullWidth sx={{ mb: 2 }}>
         <InputLabel id="season-league-select-label">Season</InputLabel>
         <Select
@@ -127,7 +136,16 @@ const Stats = () => {
         <>
           <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>Game Logs</Typography>
           <Box sx={{ overflowX: 'auto' }}>
-            <Table size="small" sx={{ minWidth: 1000 }}>
+            <Table
+              size="small"
+              sx={{
+                minWidth: 1000,
+                '& .MuiTableCell-root': {
+                  padding: { xs: '6px 6px', sm: '2px 4px' }, // uniform with SeasonLogTable
+                  fontSize: '0.95rem',
+                },
+              }}
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Date</TableCell>
@@ -182,7 +200,7 @@ const Stats = () => {
           </Box>
         </>
       )}
-    </Paper>
+    </>
   );
 };
 

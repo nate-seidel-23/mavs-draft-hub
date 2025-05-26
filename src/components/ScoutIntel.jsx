@@ -42,9 +42,9 @@ const ScoutIntel = ({ player }) => {
         handleClose();
     };
   return (
-    <Paper sx={{ p: 3, mt: 4, mx: 5 }}>
+    <>
       <h2>Scout Rankings</h2>
-      <Box display="flex" gap={4} flexWrap="wrap">
+      <Box display="flex" gap={2} flexWrap="wrap" justifyContent={"center"}>
         {scoutList.map(scout => {
           const rank = player.scoutRankings ? player.scoutRankings[scout] : undefined;
           return (
@@ -59,11 +59,14 @@ const ScoutIntel = ({ player }) => {
           );
         })}
       </Box>
-      <Box mt={3} mb={1}>
-        <Button variant="contained" onClick={handleAddReport}>Add Report</Button>
-      </Box>
       <h2>Scout Reports</h2>
-      <Box>
+      <Box sx={{
+                maxHeight: 300, // adjust as needed
+                overflowY: 'auto',
+                mb: 2,
+                pr: 1
+            }}
+        >
         {reports.length === 0 ? (
           <Typography variant="body2">No reports available.</Typography>
         ) : (
@@ -76,6 +79,9 @@ const ScoutIntel = ({ player }) => {
             </Box>
           ))
         )}
+      </Box>
+      <Box mt={3} mb={1}>
+        <Button variant="contained" onClick={handleAddReport}>Add Report</Button>
       </Box>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add Scout Report</DialogTitle>
@@ -103,7 +109,7 @@ const ScoutIntel = ({ player }) => {
           <Button onClick={handleSubmit} variant="contained">Submit</Button>
         </DialogActions>
       </Dialog>
-    </Paper>
+    </>
   );
 };
 
