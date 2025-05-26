@@ -1,9 +1,11 @@
 import { useParams } from 'react-router-dom';
-import {Box, Grid, Typography, Avatar, Paper, Tabs, Tab } from '@mui/material';
+import {Box, Grid, Typography, Avatar, Paper, Tabs, Tab, IconButton } from '@mui/material';
 import data from '../data/intern_project_data.json';
 import { formatHeight } from '../utils/format';
 import { useState } from 'react';
 import { mergePlayerData } from '../utils/mergeData';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ScoutIntel from './ScoutIntel';
 import Stats from './Stats';
 import Measurements from './Measurements';
@@ -30,12 +32,18 @@ const PlayerProfile = () => {
     const filteredLogs = allLogs.filter(log => log.League === selectedLeague);
 
     const [tab, setTab] = useState(0);
+    const navigate = useNavigate();
 
     return (
        <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f5f5', py: 4, px: { xs: 2, sm: 4 } }}>
 
-            <Box sx={{ textAlign: 'center'}}>
-                <Paper
+            <Box sx={{ textAlign: 'center', position: 'relative' }}>
+              <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 2 }}>
+                <IconButton onClick={() => navigate('/')} size="large">
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              </Box>
+              <Paper
                     id="player_card"
                     sx={{
                         p: 3,
@@ -44,7 +52,7 @@ const PlayerProfile = () => {
                         alignItems: 'center',
                         mx: 'auto',
                         width: '100%',
-                        maxWidth: 700, // Increased for better desktop layout
+                        maxWidth: 700,
                     }}
                 >
 
@@ -112,7 +120,7 @@ const PlayerProfile = () => {
           <Tab label="Compare" />
         </Tabs>
       </Box>
-      {/* Uniform Paper for all tab content */}
+      {/* Container for all tab pages */}
       <Paper sx={{ minHeight: 420, width: '100%', maxWidth: 700, mx: 'auto', p: 3 }}>
         {tab === 0 && <ScoutIntel player={player} />}
         {tab === 1 && <Stats player={player} seasonLogs={allLogs} />}

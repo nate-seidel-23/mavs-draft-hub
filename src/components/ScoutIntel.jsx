@@ -75,7 +75,15 @@ const ScoutIntel = ({ player }) => {
               <Typography variant="subtitle2" fontWeight="bold">
                 {report.scout}
               </Typography>
-              <Typography variant="body2">{report.report}</Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  whiteSpace: 'pre-line',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {report.report}
+              </Typography>
             </Box>
           ))
         )}

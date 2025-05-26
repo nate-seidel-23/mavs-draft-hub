@@ -68,3 +68,8 @@ button:focus-visible {
 .MuiTableBody-root .MuiTableRow-root:nth-of-type(even) {
   background-color: #f3f4f6;
 }
+
+.MuiTab-root:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

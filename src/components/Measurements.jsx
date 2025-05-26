@@ -12,6 +12,9 @@ const barKeys = [
   'shuttleLeft', 'shuttleRight', 'shuttleBest'
 ];
 
+const lowerIsBetterKeys = new Set(['agility', 'sprint', 'shuttleLeft', 'shuttleRight', 'shuttleBest']);
+
+
 const measurementLabels = {
   heightNoShoes: "Height (No Shoes)",
   heightShoes: "Height (With Shoes)",
@@ -163,7 +166,10 @@ const Measurements = ({ player }) => {
             {barKeys.map(key => {
               const value = measurement[key];
               if (value === null || value === undefined) return null;
-              const percentile = getPercentile(key, value);
+              let percentile = getPercentile(key, value);
+               if (lowerIsBetterKeys.has(key) && percentile !== null) {
+                  percentile = 100 - percentile;
+              }
               const circleLeft = percentile === 0
                 ? 0
                 : `calc(${percentile}% - 14px)`;

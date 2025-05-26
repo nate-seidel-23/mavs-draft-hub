@@ -1,7 +1,8 @@
-// components/BigBoard.jsx
 import { useMemo, useState} from 'react';
 import { Link } from 'react-router-dom';
-import { Table, TableHead, TableBody, TableRow, TableCell, Avatar, Typography, Box, TableSortLabel, Divider} from '@mui/material';
+import { Paper, Table, TableHead, TableBody, 
+          TableRow, TableCell, Avatar, Typography, 
+          Box, TableSortLabel, Tooltip} from '@mui/material';
 import { ArrowDropUp, ArrowDropDown } from '@mui/icons-material';
 import { mergePlayerData, getAverageRank } from '../utils/mergeData';
 import { formatHeight } from '../utils/format';
@@ -14,8 +15,20 @@ const scoutList = ["ESPN Rank", "Sam Vecenie Rank", "Kevin O'Connor Rank", "Kyle
 const getColorIcon = (rank, avg) => {
   if (rank === null || rank === undefined) return null;
   const diff = rank - avg;
-  if (diff <= -3) return <ArrowDropUp color="success" />;
-  if (diff >= 3) return <ArrowDropDown color="error" />;
+  if (diff <= -3) {
+    return (
+      <Tooltip title="This scout is particularly high on this player">
+        <ArrowDropUp color="success" />
+      </Tooltip>
+    );
+  }
+  if (diff >= 3) {
+    return (
+      <Tooltip title="This scout is particularly low on this player">
+        <ArrowDropDown color="error" />
+      </Tooltip>
+    );
+  }
   return null;
 };
 
@@ -46,8 +59,16 @@ const BigBoard = () => {
   }, [order, orderBy]);
 
   return (
-    <Box sx={{ overflowX: 'auto', px:{xs: 2, sm: 4, md: 6} }}>
-      <Paper>
+    <Paper
+      sx={{
+        mt: 2,
+        mx: { xs: 1, sm: 4, md: 8 },
+        p: 2,
+        overflowX: 'auto',
+        width: 'auto',
+        maxWidth: '100%',
+      }}
+    >
         <Table>
           <TableHead>
             <TableRow>
@@ -124,8 +145,7 @@ const BigBoard = () => {
             ))}
           </TableBody>
         </Table>
-      </Paper>
-    </Box>
+    </Paper>
   );
 };
 
