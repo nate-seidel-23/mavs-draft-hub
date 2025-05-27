@@ -4,6 +4,7 @@
 
 Designed with efficiency in mind, the app offers a sortable Big Board, detailed player profiles with tabbed views, and a comparison tool — ideal for pre-draft meetings, internal scouting workflows, or interactive draft rooms.
 
+🔗 [Live App](https://mavs-draft-hub.vercel.app/)
 ---
 
 ##  Features
