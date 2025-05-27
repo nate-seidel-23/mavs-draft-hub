@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Paper, Table, TableHead, TableBody, TableRow, TableCell, Typography, Box, FormControl, InputLabel, Select, MenuItem, Divider } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+import {
+  Table, TableHead, TableBody, TableRow, TableCell, Typography,
+  Box, FormControl, InputLabel, Select, MenuItem, Divider
+} from '@mui/material';
 import data from '../data/intern_project_data.json';
 import { useParams } from 'react-router-dom';
 
@@ -9,7 +12,7 @@ const SeasonLogTable = ({ logs }) => (
     sx={{
       minWidth: 600,
       '& .MuiTableCell-root': {
-        padding: { xs: '6px 6px', sm: '2px 4px' }, // more padding on xs, tight on sm+
+        padding: { xs: '6px 6px', sm: '2px 4px' },
         fontSize: '0.95rem',
       },
     }}
@@ -59,44 +62,41 @@ const SeasonLogTable = ({ logs }) => (
 
 const Stats = () => {
   const { playerId } = useParams();
-  // Filter logs for this player
-  const allLogs = data.seasonLogs.filter(
-    log => String(log.playerId) === String(playerId)
-  );
 
-  // Build unique season-league combos
-  const seasonLeagueCombos = Array.from(
-    new Set(allLogs.map(log => `${log.Season} - ${log.League}`))
-  );
+  const allLogs = useMemo(() => {
+    return data.seasonLogs.filter(log => String(log.playerId) === String(playerId));
+  }, [playerId]);
 
-  // For "All", group by league
-  const logsByLeague = allLogs.reduce((acc, log) => {
-    if (!acc[log.League]) acc[log.League] = [];
-    acc[log.League].push(log);
-    return acc;
-  }, {});
+  const logsByLeague = useMemo(() => {
+    return allLogs.reduce((acc, log) => {
+      if (!acc[log.League]) acc[log.League] = [];
+      acc[log.League].push(log);
+      return acc;
+    }, {});
+  }, [allLogs]);
+
+  const seasonLeagueCombos = useMemo(() => {
+    return Array.from(new Set(allLogs.map(log => `${log.Season} - ${log.League}`)));
+  }, [allLogs]);
 
   const [selectedCombo, setSelectedCombo] = useState('All');
 
-  // Filter logs for selected combo
-  let filteredLogs = [];
-  if (selectedCombo === 'All') {
-    filteredLogs = allLogs;
-  } else {
+  const filteredLogs = useMemo(() => {
+    if (selectedCombo === 'All') return allLogs;
     const [season, league] = selectedCombo.split(' - ');
-    filteredLogs = allLogs.filter(
+    return allLogs.filter(
       log => String(log.Season) === season && log.League === league
     );
-  }
+  }, [selectedCombo, allLogs]);
 
-  // Game logs filtering
-  const filteredGameLogs = selectedCombo === 'All'
-    ? []
-    : data.game_logs.filter(
-        log =>
-          String(log.playerId) === String(playerId) &&
-          `${log.season} - ${log.league}` === selectedCombo
-      );
+  const filteredGameLogs = useMemo(() => {
+    if (selectedCombo === 'All') return [];
+    return data.game_logs.filter(
+      log =>
+        String(log.playerId) === String(playerId) &&
+        `${log.season} - ${log.league}` === selectedCombo
+    );
+  }, [selectedCombo, playerId]);
 
   return (
     <>
@@ -118,12 +118,10 @@ const Stats = () => {
       <Typography variant="h6" gutterBottom>Season Logs</Typography>
       {selectedCombo === 'All' ? (
         Object.entries(logsByLeague).map(([league, logs]) => (
-          <Box key={league} sx={{ mb: 3, overflowX: 'auto' }}>
-            <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>{league}</Typography>
-            <Box sx={{ overflowX: 'auto' }}>
-              <SeasonLogTable logs={logs} />
-            </Box>
-            <Divider sx={{ mt: 2, mb: 2 }} />
+          <Box key={league} sx={{ mb: 1, overflowX: 'auto' }}>
+            <Typography variant="subtitle1" sx={{ mt: 1, mb: 1 }}>{league}</Typography>
+            <SeasonLogTable logs={logs} />
+            <Divider sx={{ mt: 2}} />
           </Box>
         ))
       ) : (
@@ -141,7 +139,7 @@ const Stats = () => {
               sx={{
                 minWidth: 1000,
                 '& .MuiTableCell-root': {
-                  padding: { xs: '6px 6px', sm: '2px 4px' }, // uniform with SeasonLogTable
+                  padding: { xs: '6px 6px', sm: '2px 4px' },
                   fontSize: '0.95rem',
                 },
               }}

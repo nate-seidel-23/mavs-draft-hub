@@ -1,38 +1,10 @@
 import React from 'react';
-import { Paper, Typography, Grid, Box } from '@mui/material';
+import { Typography, Grid, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import data from '../data/intern_project_data.json';
 import { formatHeight } from '../utils/format';
 import { useMeasurementsUtils } from '../hooks/useMeasurementsUtils';
-
-// List of measurements to show as bars (exclude height/weight)
-const barKeys = [
-  'wingspan', 'reach', 'maxVertical', 'noStepVertical', 'bodyFat',
-  'handLength', 'handWidth', 'agility', 'sprint',
-  'shuttleLeft', 'shuttleRight', 'shuttleBest'
-];
-
-const lowerIsBetterKeys = new Set(['agility', 'sprint', 'shuttleLeft', 'shuttleRight', 'shuttleBest']);
-
-
-const measurementLabels = {
-  heightNoShoes: "Height (No Shoes)",
-  heightShoes: "Height (With Shoes)",
-  weight: "Weight",
-  wingspan: "Wingspan",
-  reach: "Standing Reach",
-  maxVertical: "Max Vertical (in)",
-  noStepVertical: "No-Step Vertical (in)",
-  bodyFat: "Body Fat %",
-  handLength: "Hand Length (in)",
-  handWidth: "Hand Width (in)",
-  agility: "Lane Agility (secs)",
-  sprint: "Sprint (secs)",
-  shuttleLeft: "Shuttle Left (secs)",
-  shuttleRight: "Shuttle Right (secs)",
-  shuttleBest: "Shuttle Best (secs)"
-};
-
+import { measurementLabels, lowerIsBetterKeys } from '../constants/measurementLabels';
 const { getPercentile, getBarColor } = useMeasurementsUtils();
 
 const LegendBox = styled(Box)(({ theme }) => ({
@@ -47,44 +19,31 @@ const LegendBox = styled(Box)(({ theme }) => ({
   marginRight: 'auto',
   flexWrap: 'wrap',
   [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1.5), // smaller gap on mobile
+    gap: theme.spacing(1.5),
     marginBottom: theme.spacing(1.5),
   },
 }));
 
-const MeasurementBar = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  maxWidth: 320,
-  margin: '0 auto 1.2rem auto',
-}));
-
-const barContainerSx = {
-  position: 'relative',
-  height: 24,
-  width: 120,
-  borderRadius: 12,
-  background: '#eee',
-  overflow: 'visible',
-  display: 'flex',
-  alignItems: 'center',
-  mr: 2,
-  
-};
-
+const EXCLUDED_KEYS = ['playerId', 'weight', 'heightNoShoes', 'heightShoes'];
 
 const Measurements = ({ player }) => {
   const measurement = data.measurements
     ? data.measurements.find(m => String(m.playerId) === String(player.playerId))
     : null;
+  const allMeasurementKeys = measurement
+    ? Object.keys(measurement).filter(k => !EXCLUDED_KEYS.includes(k))
+    : [];
+  const barWidth = 120;
+  const circleWidth = 28;
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>Measurements</Typography>
+      <Typography variant="h6" gutterBottom>
+        Measurements
+      </Typography>
       {measurement ? (
         <>
-          {/* Top measurements in a single compact box */}
+          {/* Top measurements */}
           <Box
             sx={{
               border: '1px solid #e0e0e0',
@@ -110,35 +69,50 @@ const Measurements = ({ player }) => {
             </Typography>
           </Box>
 
-          {/* Key/Legend above percentile bars */}
+          {/* Legend */}
           <LegendBox>
-            {/* Gradient bar key */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Box sx={{
-                width: 60, height: 10, borderRadius: 5,
-                background: 'linear-gradient(90deg, #1565c0 0%, #fff 50%, #b71c1c 100%)',
-                border: '1px solid #bbb'
-              }} />
-              <Typography variant="caption" sx={{ color: '#1565c0', fontWeight: 500 }}>Poor</Typography>
-              <Typography variant="caption" sx={{ color: '#888', fontWeight: 500 }}>Avg</Typography>
-              <Typography variant="caption" sx={{ color: '#b71c1c', fontWeight: 500 }}>Good</Typography>
+              <Box
+                sx={{
+                  width: 60,
+                  height: 10,
+                  borderRadius: 5,
+                  background: 'linear-gradient(90deg, #1565c0 0%, #fff 50%, #b71c1c 100%)',
+                  border: '1px solid #bbb',
+                }}
+              />
+              <Typography variant="caption" sx={{ color: '#1565c0', fontWeight: 500 }}>
+                Poor
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#888', fontWeight: 500 }}>
+                Avg
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#b71c1c', fontWeight: 500 }}>
+                Good
+              </Typography>
             </Box>
-            {/* Percentile circle key */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Box sx={{
-                width: 18, height: 18, borderRadius: '50%',
-                background: '#eee', border: '2px solid #bbb',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 700, fontSize: 11, color: '#222'
-              }}>%</Box>
-              <Typography
-                variant="caption"
-                sx={{ color: '#888', whiteSpace: 'nowrap' }}
+              <Box
+                sx={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: '50%',
+                  background: '#eee',
+                  border: '2px solid #bbb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  fontSize: 11,
+                  color: '#222',
+                }}
               >
+                %
+              </Box>
+              <Typography variant="caption" sx={{ color: '#888', whiteSpace: 'nowrap' }}>
                 – Percentile
               </Typography>
             </Box>
-            {/* Measurement value key */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Typography
                 variant="caption"
@@ -155,7 +129,7 @@ const Measurements = ({ player }) => {
             </Box>
           </LegendBox>
 
-          {/* Percentile Bars, centered */}
+          {/* Percentile Bars */}
           <Grid
             container
             spacing={2}
@@ -163,34 +137,43 @@ const Measurements = ({ player }) => {
             alignItems="flex-start"
             sx={{ width: '100%', mx: 'auto' }}
           >
-            {barKeys.map(key => {
+            {allMeasurementKeys.map(key => {
               const value = measurement[key];
               if (value === null || value === undefined) return null;
               let percentile = getPercentile(key, value);
-               if (lowerIsBetterKeys.has(key) && percentile !== null) {
-                  percentile = 100 - percentile;
+              if (lowerIsBetterKeys.has(key) && percentile !== null) {
+                percentile = 100 - percentile;
               }
-              const circleLeft = percentile === 0
-                ? 0
-                : `calc(${percentile}% - 14px)`;
+
+              const fillWidth = (percentile / 100) * barWidth;
+              const circleLeft = Math.min(
+                Math.max(fillWidth - circleWidth / 2, 0),
+                barWidth - circleWidth
+              );
 
               return (
                 <Grid item xs={12} sm={4} key={key} sx={{ textAlign: 'center' }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                    {/* Label on top, centered */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      width: 160,
+                      mx: 'auto',
+                    }}
+                  >
                     <Typography
                       variant="subtitle2"
                       color="textSecondary"
                       sx={{ mb: 1, textAlign: 'center', minHeight: 24 }}
                     >
-                      {measurementLabels[key]}
+                      {measurementLabels[key] || key}
                     </Typography>
-                    {/* Bar with percentile circle */}
                     <Box
                       sx={{
                         position: 'relative',
                         height: 24,
-                        width: 120, // or 140, but use a fixed value
+                        width: barWidth,
                         borderRadius: 12,
                         background: '#eee',
                         overflow: 'visible',
@@ -200,21 +183,23 @@ const Measurements = ({ player }) => {
                       }}
                     >
                       {/* Colored bar */}
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          left: 0,
-                          top: 0,
-                          height: '100%',
-                          width: `${percentile}%`,
-                          background: getBarColor(percentile),
-                          borderRadius: 12,
-                          border: percentile > 0 ? '1.5px solid #888' : 'none',
-                          transition: 'width 0.3s',
-                          zIndex: 1
-                        }}
-                      />
-                      {/* Percentile circle at the end of the colored bar */}
+                      {percentile >= 10 && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            height: '100%',
+                            width: `${fillWidth}px`,
+                            background: getBarColor(percentile),
+                            borderRadius: percentile >= 98 ? '12px' : '12px 0 0 12px',
+                            border: percentile > 8 ? '1.5px solid #888' : 'none',
+                            transition: 'width 0.3s',
+                            zIndex: 1,
+                          }}
+                        />
+                      )}
+                      {/* Percentile circle */}
                       {percentile !== null && (
                         <Box
                           sx={{
@@ -222,8 +207,8 @@ const Measurements = ({ player }) => {
                             top: '50%',
                             left: circleLeft,
                             transform: 'translateY(-50%)',
-                            width: 28,
-                            height: 28,
+                            width: circleWidth,
+                            height: circleWidth,
                             borderRadius: '50%',
                             background: getBarColor(percentile),
                             border: '3px solid #fff',
@@ -234,15 +219,14 @@ const Measurements = ({ player }) => {
                             fontSize: 15,
                             color: '#222',
                             zIndex: 2,
-                            boxShadow: '0 0 2px #888'
+                            boxShadow: '0 0 2px #888',
                           }}
                         >
                           {percentile}
                         </Box>
                       )}
                     </Box>
-                    {/* Value below bar, centered */}
-                    <Typography variant="caption" color="textPrimary" sx={{ fontSize: 15, fontWeight: 500}}>
+                    <Typography variant="caption" color="textPrimary" sx={{ fontSize: 15, fontWeight: 500 }}>
                       {(key === 'wingspan' || key === 'reach') ? formatHeight(value) : value}
                     </Typography>
                   </Box>

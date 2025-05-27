@@ -73,3 +73,24 @@ button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* For Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #fff; /* Track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e0e0e0; /* Thumb color */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-corner {
+  background: #fff;
+}
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e0e0e0 #fff; /* thumb color, track color */
+}

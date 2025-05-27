@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Autocomplete, Paper, Box, Typography, Grid, TextField, MenuItem, Tabs, Tab, InputAdornment } from '@mui/material';
+import { Autocomplete, Box, Typography, Grid, TextField, MenuItem, Tabs, Tab, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { formatHeight } from '../utils/format';
 import data from '../data/intern_project_data.json';
+import {measurementLabels, lowerIsBetterKeys }from '../constants/measurementLabels';
 
 // Helper to get measurements for a player
 const getMeasurements = (p) =>
@@ -15,6 +16,17 @@ const getStats = (p) =>
 const getRanks = (p) =>
     data.scoutRankings.find(s => String(s.playerId) === String(p.playerId));
 
+const getColor = (val, compareVal, key) => {
+  if (val == null || compareVal == null) return 'inherit';
+  if (val === compareVal) return 'inherit';
+  const higherIsBetter = !lowerIsBetterKeys.has(key);
+  if (higherIsBetter) {
+    return val > compareVal ? 'green' : 'red';
+  } else {
+    return val < compareVal ? 'green' : 'red';
+  }
+};
+
 const statKeys = [
   { key: 'PTS', label: 'PTS' },
   { key: 'TRB', label: 'REB' },
@@ -25,89 +37,66 @@ const statKeys = [
   { key: 'BLK', label: 'BLK' }
 ];
 
-// Reusable player card
+// Player card in compare view
 const PlayerCompareCard = ({ player, compareTo, tab }) => {
-    const ranks = getRanks(player) || {};
-    const compareRanks = getRanks(compareTo) || {};
-    const stats = getStats(player) || {};
-    const compareStats = getStats(compareTo) || {};
-    const measurements = getMeasurements(player) || {};
-    const compareMeasurements = getMeasurements(compareTo) || {};
+  const ranks = getRanks(player) || {};
+  const compareRanks = getRanks(compareTo) || {};
+  const stats = getStats(player) || {};
+  const compareStats = getStats(compareTo) || {};
+  const measurements = getMeasurements(player) || {};
+  const compareMeasurements = getMeasurements(compareTo) || {};
 
-    // Helper to color stat
-    const getColor = (val, compareVal, higherIsBetter = true) => {
-        if (val == null || compareVal == null) return 'inherit';
-        if (val === compareVal) return 'inherit';
-        if (higherIsBetter) {
-        return val > compareVal ? 'green' : 'red';
-        } else {
-        return val < compareVal ? 'green' : 'red';
-        }
-    };
+  const measurementKeys = Object.keys(measurements)
+  .filter(key => key !== 'playerId')
+  .map(key => ({ key }));
 
-    return (
-        <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2 }}>
-        <Typography variant="subtitle1" fontWeight="bold">{player.name}</Typography>
-        {tab === 0 && (
-            <Box>
-            {Object.entries(ranks).filter(([key]) => key !=='playerId')
-            .map(([key, value]) => (
-                <Typography
+  return (
+    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2 }}>
+      <Typography variant="subtitle1" fontWeight="bold">{player.name}</Typography>
+      {tab === 0 && (
+        <Box>
+          {Object.entries(ranks).filter(([key]) => key !== 'playerId')
+            .map(([key, value], idx) => (
+              <Typography
                 key={key}
                 variant="body2"
                 sx={{ color: getColor(value, compareRanks[key], false) }}
-                >
-                {key}: {value ?? '—'}
-                </Typography>
+              >
+                {`Mavs Scout ${idx + 1}`}: {value ?? '—'}
+              </Typography>
             ))}
-            </Box>
-        )}
-        {tab === 1 && (
-            <Box>
-            {statKeys.map(({ key, label }) => (
-                <Typography
-                key={key}
-                variant="body2"
-                sx={{ color: getColor(stats[key], compareStats[key]) }}
-                >
-                {label}: {stats[key] ?? '—'}
-                </Typography>
-            ))}
-            </Box>
-        )}
-        {tab === 2 && (
-            <Box>
-            {[
-                { label: 'Height (No Shoes)', key: 'heightNoShoes' },
-                { label: 'Height (With Shoes)', key: 'heightShoes' },
-                { label: 'Wingspan', key: 'wingspan' },
-                { label: 'Standing Reach', key: 'reach' },
-                { label: 'Weight', key: 'weight' },
-                { label: 'Body Fat %', key: 'bodyFat' },
-                { label: 'Hand Length', key: 'handLength' },
-                { label: 'Hand Width', key: 'handWidth' },
-                { label: 'Lane Agility', key: 'agility', higherIsBetter: false },
-                { label: 'Sprint', key: 'sprint', higherIsBetter: false },
-                { label: 'Shuttle Left', key: 'shuttleLeft', higherIsBetter: false },
-                { label: 'Shuttle Right', key: 'shuttleRight', higherIsBetter: false },
-                { label: 'Shuttle Best', key: 'shuttleBest', higherIsBetter: false },
-                { label: 'No Step Vertical', key: 'noStepVertical' },
-                { label: 'Max Vertical', key: 'maxVertical' }
-            ].map(({ label, key, higherIsBetter }) => (
-      <Typography
-        key={key}
-        variant="body2"
-        sx={{ color: getColor(measurements[key], compareMeasurements[key], higherIsBetter !== false) }}
-      >
-        {label}: {['heightNoShoes', 'heightShoes', 'wingspan', 'reach'].includes(key)
-          ? measurements[key] ? formatHeight(measurements[key]) : '—'
-          : measurements[key] ?? '—'}
-      </Typography>
-    ))}
-  </Box>
-)}
         </Box>
-    );
+      )}
+      {tab === 1 && (
+        <Box>
+          {statKeys.map(({ key, label }) => (
+            <Typography
+              key={key}
+              variant="body2"
+              sx={{ color: getColor(stats[key], compareStats[key]) }}
+            >
+              {label}: {stats[key] ?? '—'}
+            </Typography>
+          ))}
+        </Box>
+      )}
+      {tab === 2 && (
+        <Box>
+          {measurementKeys.map(({ key }) => (
+            <Typography
+              key={key}
+              variant="body2"
+              sx={{ color: getColor(measurements[key], compareMeasurements[key], key) }}
+            >
+              {measurementLabels[key]}: {['heightNoShoes', 'heightShoes', 'wingspan', 'reach'].includes(key)
+                ? measurements[key] ? formatHeight(measurements[key]) : '—'
+                : measurements[key] ?? '—'}
+            </Typography>
+          ))}
+        </Box>
+      )}
+    </Box>
+  );
 };
 
 const Compare = ({ player }) => {
