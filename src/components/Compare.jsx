@@ -4,6 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { formatHeight } from '../utils/format';
 import data from '../data/intern_project_data.json';
 import {measurementLabels, lowerIsBetterKeys }from '../constants/measurementLabels';
+import Avatar from '@mui/material/Avatar';
 
 // Helper to get measurements for a player
 const getMeasurements = (p) =>
@@ -42,7 +43,7 @@ const statKeys = [
 ];
 
 // Player card in compare view
-const PlayerCompareCard = ({ player, compareTo, tab }) => {
+const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
   const ranks = getRanks(player) || {};
   const compareRanks = getRanks(compareTo) || {};
   const stats = getStats(player) || {};
@@ -55,47 +56,195 @@ const PlayerCompareCard = ({ player, compareTo, tab }) => {
   .map(key => ({ key }));
 
   return (
-    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2, minWidth: 200 }}>
-      <Typography variant="subtitle1" fontWeight="bold">{player.name}</Typography>
+    <Box
+      sx={{
+        border: '1px solid #e0e0e0',
+        borderRadius: 2,
+        p: 2,
+        minWidth: 200,
+        width: '100%', 
+        position: 'relative',
+        overflow: 'visible',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+      }}
+    >
+      {/* Show avatar in upper right only if showAvatar is true and player.photoUrl exists */}
+      {showAvatar && player.photoUrl && (
+        <Avatar
+          src={player.photoUrl}
+          alt={player.name}
+          sx={{
+            position: 'absolute',
+            top: 4,
+            right: 12,
+            width: 50,
+            height: 50,
+            boxShadow: 2,
+            background: '#eee',
+          }}
+        />
+      )}
+      <Typography
+        variant="subtitle1"
+        fontWeight="bold"
+        sx={{
+          ...(showAvatar && player.photoUrl
+            ? { paddingRight: '64px' }
+            : { textAlign: 'center', width: '100%' }
+          ),
+          overflow: 'visible',
+          textOverflow: 'clip',
+          whiteSpace: 'nowrap',
+          display: 'block',
+        }}
+      >
+        {player.name}
+      </Typography>
+      <Box
+        sx={{
+          borderBottom: '1px solid #e0e0e0',
+          my: 2,
+          width: '100%',
+          maxWidth: showAvatar ? 600 : 340,
+          mx: 'auto',
+        }}
+      />
       {tab === 0 && (
         <Box>
           {Object.entries(ranks).filter(([key]) => key !== 'playerId')
             .map(([key, value], idx) => (
-              <Typography
+              <Box
                 key={key}
-                variant="body2"
-                sx={{ color: getColor(value, compareRanks[key], key, 'scoutRank') }}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 0.5,
+                }}
               >
-                {`Mavs Scout ${idx + 1}`}: {value ?? '—'}
-              </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: 180,
+                  }}
+                >
+                  <span style={{
+                    fontWeight: 700,
+                    color: '#111',
+                    display: 'inline-block',
+                  }}>
+                    {`Mavs Scout ${idx + 1}: `}
+                    <span style={{
+                      color: getColor(value, compareRanks[key], key, 'scoutRank'),
+                      fontWeight: 700,
+                      marginLeft: 4,
+                      display: 'inline-block',
+                      minWidth: 32,
+                    }}>
+                      {value ?? '—'}
+                    </span>
+                  </span>
+                </Box>
+              </Box>
             ))}
         </Box>
       )}
       {tab === 1 && (
         <Box>
           {statKeys.map(({ key, label }) => (
-            <Typography
+            <Box
               key={key}
-              variant="body2"
-              sx={{ color: getColor(stats[key], compareStats[key]) }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                mb: 0.5,
+              }}
             >
-              {label}: {stats[key] ?? '—'}
-            </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: 180,
+                }}
+              >
+                <span style={{
+                  fontWeight: 700,
+                  color: '#111',
+                  textAlign: 'right',
+                  display: 'inline-block',
+                  marginRight: 8,
+                }}>
+                  {label}:
+                </span>
+                <span style={{
+                  color: getColor(stats[key], compareStats[key]),
+                  fontWeight: 700,
+                  textAlign: 'left',
+                  display: 'inline-block',
+                  minWidth: 32,
+                }}>
+                  {stats[key] ?? '—'}
+                </span>
+              </Box>
+            </Box>
           ))}
         </Box>
       )}
       {tab === 2 && (
-        <Box>
-          {measurementKeys.map(({ key }) => (
-            <Typography
-              key={key}
-              variant="body2"
-              sx={{ color: getColor(measurements[key], compareMeasurements[key], key) }}
-            >
-              {measurementLabels[key]}: {['heightNoShoes', 'heightShoes', 'wingspan', 'reach'].includes(key)
-                ? measurements[key] ? formatHeight(measurements[key]) : '—'
-                : measurements[key] ?? '—'}
-            </Typography>
+        <Box sx={{ minWidth: 0 }}>
+          {measurementKeys.map(({ key }, idx) => (
+            <React.Fragment key={key}>
+              <Typography
+                variant="body2"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  minWidth: 0,
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color: '#111',
+                    minWidth: 140,
+                    maxWidth: 140,
+                    flexShrink: 0,
+                    display: 'inline-block',
+                  }}
+                >
+                  {measurementLabels[key]}:
+                </span>
+                <span
+                  style={{
+                    color: getColor(measurements[key], compareMeasurements[key], key),
+                    fontWeight: 700,
+                    marginLeft: 8,
+                    minWidth: 0,
+                    wordBreak: 'break-all',
+                    display: 'inline-block',
+                    whiteSpace: 'nowrap',
+                    flex: 1,
+                    textAlign: 'right',
+                  }}
+                >
+                  {['heightNoShoes', 'heightShoes', 'wingspan', 'reach'].includes(key)
+                    ? measurements[key] ? formatHeight(measurements[key]) : '—'
+                    : measurements[key] ?? '—'}
+                </span>
+              </Typography>
+              {idx < measurementKeys.length - 1 && (
+                <Box
+                  sx={{
+                    borderBottom: '1px solid #e0e0e0',
+                    my: 1,
+                    width: '100%',
+                    mx: 'auto',
+                  }}
+                />
+              )}
+            </React.Fragment>
           ))}
         </Box>
       )}
@@ -166,12 +315,12 @@ const Compare = ({ player }) => {
             <Tab label="Measurements" />
       </Tabs>
       {comparePlayer ? (
-        <Grid container spacing={2} justifyContent="center">
-          <Grid size={{ xs: 12, md: 6 }}>
-            <PlayerCompareCard player={player} compareTo={comparePlayer} tab={tab} />
+        <Grid container spacing={2} justifyContent="center" alignItems="stretch">
+          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+            <PlayerCompareCard player={player} compareTo={comparePlayer} tab={tab} showAvatar={false} />
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <PlayerCompareCard player={comparePlayer} compareTo={player} tab={tab} />
+          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+            <PlayerCompareCard player={comparePlayer} compareTo={player} tab={tab} showAvatar={true} />
           </Grid>
         </Grid>
       ) : (

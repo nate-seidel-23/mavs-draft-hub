@@ -79,7 +79,9 @@ const Stats = () => {
     return Array.from(new Set(allLogs.map(log => `${log.Season} - ${log.League}`)));
   }, [allLogs]);
 
-  const [selectedCombo, setSelectedCombo] = useState('All');
+  const [selectedCombo, setSelectedCombo] = useState(
+    seasonLeagueCombos.length === 1 ? seasonLeagueCombos[0] : 'All'
+  );
 
   const filteredLogs = useMemo(() => {
     if (selectedCombo === 'All') return allLogs;
@@ -100,20 +102,22 @@ const Stats = () => {
 
   return (
     <>
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel id="season-league-select-label">Season</InputLabel>
-        <Select
-          labelId="season-league-select-label"
-          value={selectedCombo}
-          label="Season"
-          onChange={e => setSelectedCombo(e.target.value)}
-        >
-          <MenuItem value="All">All</MenuItem>
-          {seasonLeagueCombos.map(combo => (
-            <MenuItem key={combo} value={combo}>{combo}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      {seasonLeagueCombos.length > 1 && (
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="season-league-select-label">Season</InputLabel>
+          <Select
+            labelId="season-league-select-label"
+            value={selectedCombo}
+            label="Season"
+            onChange={e => setSelectedCombo(e.target.value)}
+          >
+            <MenuItem value="All">All</MenuItem>
+            {seasonLeagueCombos.map(combo => (
+              <MenuItem key={combo} value={combo}>{combo}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
 
       <Typography variant="h6" gutterBottom>Season Logs</Typography>
       {selectedCombo === 'All' ? (
