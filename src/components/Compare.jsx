@@ -52,8 +52,8 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
   const compareMeasurements = getMeasurements(compareTo) || {};
 
   const measurementKeys = Object.keys(measurements)
-  .filter(key => key !== 'playerId')
-  .map(key => ({ key }));
+    .filter(key => key !== 'playerId')
+    .map(key => ({ key }));
 
   return (
     <Box
@@ -61,8 +61,8 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
         border: '1px solid #e0e0e0',
         borderRadius: 2,
         p: 2,
-        minWidth: 200,
-        width: '100%', 
+        minWidth: 0,
+        width: '100%',
         position: 'relative',
         overflow: 'visible',
         display: 'flex',
@@ -70,7 +70,6 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
         flex: 1,
       }}
     >
-      {/* Show avatar in upper right only if showAvatar is true and player.photoUrl exists */}
       {showAvatar && player.photoUrl && (
         <Avatar
           src={player.photoUrl}
@@ -91,7 +90,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
         fontWeight="bold"
         sx={{
           ...(showAvatar && player.photoUrl
-            ? { paddingRight: '64px' }
+            ? { paddingRight: '80px' }
             : { textAlign: 'center', width: '100%' }
           ),
           overflow: 'visible',
@@ -111,6 +110,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
           mx: 'auto',
         }}
       />
+      {/* --- Scout Rankings --- */}
       {tab === 0 && (
         <Box>
           {Object.entries(ranks).filter(([key]) => key !== 'playerId')
@@ -119,6 +119,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                 key={key}
                 sx={{
                   display: 'flex',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   mb: 0.5,
                 }}
@@ -128,29 +129,34 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                     display: 'flex',
                     alignItems: 'center',
                     width: 180,
+                    justifyContent: 'center',
                   }}
                 >
                   <span style={{
                     fontWeight: 700,
                     color: '#111',
+                    textAlign: 'right',
                     display: 'inline-block',
+                    width: 120,
                   }}>
-                    {`Mavs Scout ${idx + 1}: `}
-                    <span style={{
-                      color: getColor(value, compareRanks[key], key, 'scoutRank'),
-                      fontWeight: 700,
-                      marginLeft: 4,
-                      display: 'inline-block',
-                      minWidth: 32,
-                    }}>
-                      {value ?? '—'}
-                    </span>
+                    {`Mavs Scout ${idx + 1}:`}
+                  </span>
+                  <span style={{
+                    color: getColor(value, compareRanks[key], key, 'scoutRank'),
+                    fontWeight: 700,
+                    marginLeft: 8,
+                    textAlign: 'left',
+                    display: 'inline-block',
+                    width: 32,
+                  }}>
+                    {value ?? '—'}
                   </span>
                 </Box>
               </Box>
             ))}
         </Box>
       )}
+      {/* --- Stats --- */}
       {tab === 1 && (
         <Box>
           {statKeys.map(({ key, label }) => (
@@ -158,6 +164,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
               key={key}
               sx={{
                 display: 'flex',
+                justifyContent: 'center',
                 alignItems: 'center',
                 mb: 0.5,
               }}
@@ -167,21 +174,20 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                   display: 'flex',
                   alignItems: 'center',
                   width: 180,
+                  justifyContent: 'center',
                 }}
               >
                 <span style={{
                   fontWeight: 700,
                   color: '#111',
-                  textAlign: 'right',
                   display: 'inline-block',
-                  marginRight: 8,
                 }}>
                   {label}:
                 </span>
                 <span style={{
                   color: getColor(stats[key], compareStats[key]),
                   fontWeight: 700,
-                  textAlign: 'left',
+                  marginLeft: 8,
                   display: 'inline-block',
                   minWidth: 32,
                 }}>
@@ -192,6 +198,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
           ))}
         </Box>
       )}
+      {/* --- Measurements --- */}
       {tab === 2 && (
         <Box sx={{ minWidth: 0 }}>
           {measurementKeys.map(({ key }, idx) => (
@@ -316,10 +323,10 @@ const Compare = ({ player }) => {
       </Tabs>
       {comparePlayer ? (
         <Grid container spacing={2} justifyContent="center" alignItems="stretch">
-          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+          <Grid sx={{ display: 'flex', flex: 1, minWidth: 0 }} size={{ xs: 12, md: 6 }}>
             <PlayerCompareCard player={player} compareTo={comparePlayer} tab={tab} showAvatar={false} />
           </Grid>
-          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+          <Grid sx={{ display: 'flex', flex: 1, minWidth: 0 }} size={{ xs: 12, md: 6 }}>
             <PlayerCompareCard player={comparePlayer} compareTo={player} tab={tab} showAvatar={true} />
           </Grid>
         </Grid>
