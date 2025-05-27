@@ -6,7 +6,7 @@ import {
   Box, TableSortLabel, Tooltip
 } from '@mui/material';
 import { ArrowDropUp, ArrowDropDown } from '@mui/icons-material';
-import { mergePlayerData, getAverageRank } from '../utils/mergeData';
+import { mergePlayerData } from '../utils/mergeData';
 import { formatHeight } from '../utils/format';
 import data from '../data/intern_project_data.json';
 
