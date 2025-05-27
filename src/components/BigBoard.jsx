@@ -65,7 +65,6 @@ const BigBoard = () => {
       sx={{
         mt: 2,
         mx: { xs: 1, sm: 4, md: 8 },
-        p: 2,
         overflowX: 'auto',
         width: 'auto',
         maxWidth: '100%',
@@ -83,7 +82,20 @@ const BigBoard = () => {
                 Avg Rank
               </TableSortLabel>
             </TableCell>
-            <TableCell>Name</TableCell>
+            <TableCell
+              sx={{
+                position: 'sticky',
+                left: 0,
+                zIndex: 2,
+                minWidth: 160,
+                backgroundColor: 'background.paper',
+                borderRight: (theme) => `1px solid ${theme.palette.divider}`,
+                borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
+                borderTop: `transparent`,
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              }}
+            >Name
+            </TableCell>
             <TableCell>
               <TableSortLabel
                 active={orderBy === 'height'}
@@ -116,12 +128,30 @@ const BigBoard = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {players.map(player => (
-            <TableRow key={player.playerId}>
+          {players.map((player, idx) => (
+            <TableRow 
+              key={player.playerId}
+              sx={{
+                zIndex: 1,
+                position: 'relative',
+              }}
+            >
               <TableCell>
                 <Typography fontWeight="bold">{player.averageRank.toFixed(1)}</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell 
+                sx={{
+                  position: 'sticky',
+                  left: 0,
+                  zIndex: 1,
+                  backgroundColor: idx % 2 === 0 ? 'background.paper' : '#f3f4f6',
+                  borderRight: (theme) => `1px solid ${theme.palette.divider}`,
+                  borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
+                  borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+                  borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+                  
+                }}
+              >
                 <Box display="flex" alignItems="center">
                   <Avatar src={player.photoUrl} sx={{ width: 40, height: 40, mr: 1 }} />
                   <Link to={`/player/${player.playerId}`} style={{ textDecoration: 'none' }}>

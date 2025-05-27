@@ -143,7 +143,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                     </span>
                     <span
                       style={{
-                        fontWeight: 700,
+                        fontWeight: winners.includes(0) ? 'bold' : 'normal',
                         display: 'inline-block',
                         minWidth: 32,
                         background: winners.includes(0) ? '#e3f0fc' : undefined,
@@ -174,7 +174,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                   <span style={{ fontWeight: 700, color: '#111', display: 'inline-block', marginRight: 8 }}>{label}:</span>
                   <span
                     style={{
-                      fontWeight: 700,
+                      fontWeight: winners.includes(0) ? 'bold' : 'normal',
                       display: 'inline-block',
                       minWidth: 32,
                       background: winners.includes(0) ? '#e3f0fc' : undefined,
@@ -225,7 +225,7 @@ const PlayerCompareCard = ({ player, compareTo, tab, showAvatar }) => {
                   </span>
                   <span
                     style={{
-                      fontWeight: 700,
+                      fontWeight: winners.includes(0) ? 'bold' : 'normal',
                       display: 'inline-block',
                       minWidth: 32,
                       background: winners.includes(0) ? '#e3f0fc' : undefined,
