@@ -163,10 +163,10 @@ const Compare = ({ player }) => {
       </Tabs>
       {comparePlayer ? (
         <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <PlayerCompareCard player={player} compareTo={comparePlayer} tab={tab} />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <PlayerCompareCard player={comparePlayer} compareTo={player} tab={tab} />
           </Grid>
         </Grid>

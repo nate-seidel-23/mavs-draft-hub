@@ -31,7 +31,7 @@ const PlayerStatsCard = ({ stats }) => (
         { label: 'AST', value: stats.AST ?? '-' },
         { label: 'FG%', value: stats['FG%'] ?? '-' }
       ].map((stat, idx) => (
-        <Grid item xs={3} key={idx}>
+        <Grid size={{xs:3}} key={idx}>
           <Box textAlign="center">
             <Typography variant="caption" color="textSecondary">{stat.label}</Typography>
             <Typography variant="h6">{stat.value}</Typography>
@@ -83,14 +83,14 @@ const PlayerProfile = () => {
           }}
         >
           <Grid container spacing={2} alignItems="center" justifyContent="center">
-            <Grid item xs={12} sm={4}>
+            <Grid sx={{ xs: 12, sm: 4 }}>
               <Avatar
                 src={player.photoUrl}
                 alt={player.name || 'Player avatar'}
                 sx={{ width: 120, height: 120, margin: 'auto' }}
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid sx={{ xs: 12, sm: 5 }}>
               <Typography variant="h5" fontWeight="bold">{player.name}</Typography>
               <Typography variant="subtitle1">{player.currentTeam} | {player.league}</Typography>
               <Typography variant="body2" color="text.secondary" mt={1}>
@@ -103,7 +103,7 @@ const PlayerProfile = () => {
                 }<br />
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid sx={{ xs: 12, sm: 3 }}>
               <PlayerStatsCard stats={allLogs[0] || {}} />
             </Grid>
           </Grid>

@@ -152,7 +152,7 @@ const Measurements = ({ player }) => {
               );
 
               return (
-                <Grid item xs={12} sm={4} key={key} sx={{ textAlign: 'center' }}>
+                <Grid size={{ xs: 12, sm: 4 }} key={key} sx={{ textAlign: 'center' }}>
                   <Box
                     sx={{
                       display: 'flex',
