@@ -14,17 +14,22 @@ export function useMeasurementsUtils() {
   }
 
   function getBarColor(percentile) {
+    // Red:   rgb(183,28,28)
+    // White: rgb(255,255,255)
+    // Green: rgb(56,142,60)
     if (percentile <= 50) {
+      // Interpolate from red to white
       const t = percentile / 50;
-      const r = Math.round(21 + (255 - 21) * t);
-      const g = Math.round(101 + (255 - 101) * t);
-      const b = Math.round(192 + (255 - 192) * t);
+      const r = Math.round(183 + (255 - 183) * t);
+      const g = Math.round(28 + (255 - 28) * t);
+      const b = Math.round(28 + (255 - 28) * t);
       return `rgb(${r},${g},${b})`;
     } else {
+      // Interpolate from white to green
       const t = (percentile - 50) / 50;
-      const r = Math.round(255 + (183 - 255) * t);
-      const g = Math.round(255 + (28 - 255) * t);
-      const b = Math.round(255 + (28 - 255) * t);
+      const r = Math.round(255 + (56 - 255) * t);
+      const g = Math.round(255 + (142 - 255) * t);
+      const b = Math.round(255 + (60 - 255) * t);
       return `rgb(${r},${g},${b})`;
     }
   }
