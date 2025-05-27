@@ -1,4 +1,3 @@
-// src/hooks/useMeasurementsUtils.js
 import data from '../data/intern_project_data.json';
 
 export function useMeasurementsUtils() {
