@@ -77,17 +77,17 @@ const Measurements = ({ player }) => {
                   width: 60,
                   height: 10,
                   borderRadius: 5,
-                  background: 'linear-gradient(90deg, #1565c0 0%, #fff 50%, #b71c1c 100%)',
+                  background: 'linear-gradient(90deg, #b71c1c 0%, #fff 50%, #388e3c 100%)',
                   border: '1px solid #bbb',
                 }}
               />
-              <Typography variant="caption" sx={{ color: '#1565c0', fontWeight: 500 }}>
+              <Typography variant="caption" sx={{ color: '#b71c1c', fontWeight: 500 }}>
                 Poor
               </Typography>
               <Typography variant="caption" sx={{ color: '#888', fontWeight: 500 }}>
                 Avg
               </Typography>
-              <Typography variant="caption" sx={{ color: '#b71c1c', fontWeight: 500 }}>
+              <Typography variant="caption" sx={{ color: '#388e3c', fontWeight: 500 }}>
                 Good
               </Typography>
             </Box>
