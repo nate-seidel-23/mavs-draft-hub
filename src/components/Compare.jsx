@@ -16,9 +16,13 @@ const getStats = (p) =>
 const getRanks = (p) =>
     data.scoutRankings.find(s => String(s.playerId) === String(p.playerId));
 
-const getColor = (val, compareVal, key) => {
+const getColor = (val, compareVal, key, type = 'stat') => {
   if (val == null || compareVal == null) return 'inherit';
   if (val === compareVal) return 'inherit';
+  if (type === 'scoutRank') {
+    // Lower is better for scout ranks
+    return val < compareVal ? 'green' : 'red';
+  }
   const higherIsBetter = !lowerIsBetterKeys.has(key);
   if (higherIsBetter) {
     return val > compareVal ? 'green' : 'red';
@@ -51,7 +55,7 @@ const PlayerCompareCard = ({ player, compareTo, tab }) => {
   .map(key => ({ key }));
 
   return (
-    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2 }}>
+    <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 2, p: 2, minWidth: 200 }}>
       <Typography variant="subtitle1" fontWeight="bold">{player.name}</Typography>
       {tab === 0 && (
         <Box>
@@ -60,7 +64,7 @@ const PlayerCompareCard = ({ player, compareTo, tab }) => {
               <Typography
                 key={key}
                 variant="body2"
-                sx={{ color: getColor(value, compareRanks[key], false) }}
+                sx={{ color: getColor(value, compareRanks[key], key, 'scoutRank') }}
               >
                 {`Mavs Scout ${idx + 1}`}: {value ?? '—'}
               </Typography>
