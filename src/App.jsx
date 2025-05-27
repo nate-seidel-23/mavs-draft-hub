@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import BigBoard from './components/bigBoard';
+import BigBoard from './components/BigBoard';
 import PlayerProfile from './components/PlayerProfile';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
