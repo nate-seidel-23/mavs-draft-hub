@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Box, Typography, Button, TextField, Dialog, DialogTitle,
   DialogContent, DialogActions, FormControl, InputLabel, Select,
-  MenuItem, Snackbar, Alert, Slider
+  MenuItem, Snackbar, Alert, Slider, Divider
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import data from '../data/intern_project_data.json';
@@ -69,15 +69,29 @@ const ScoutIntel = ({ player }) => {
   return (
     <>
       <Typography variant="h5" gutterBottom>Scout Rankings</Typography>
-      <Box display="flex" gap={2} flexWrap="wrap" justifyContent="center">
+      <Box display="flex" flexWrap="wrap" justifyContent="center">
         {scoutRankingKeys.map((key, idx) => (
           <Box key={key} display="flex" alignItems="center">
-            <Typography variant="body2" fontWeight="bold" sx={{ mr: 1 }}>
+            <Typography variant="body2" color="textSecondary" sx={{ mr: 1 }}>
               {`Mavericks Scout ${idx + 1}`}:
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" fontWeight="bold">
               {rankingObj[key] ?? '—'}
             </Typography>
+
+            {idx < scoutRankingKeys.length - 1 && (
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ mx: 1,  
+                      alignSelf: 'center',
+                      height: {
+                        xs: '40%',
+                        sm: '80%'
+                      } 
+                }}
+              />
+            )}
           </Box>
         ))}
       </Box>

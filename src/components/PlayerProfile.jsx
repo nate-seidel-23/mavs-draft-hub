@@ -79,7 +79,7 @@ const PlayerProfile = () => {
             alignItems: 'center',
             mx: 'auto',
             width: '100%',
-            maxWidth: 700,
+            maxWidth: 800,
           }}
         >
           <Grid container spacing={2} alignItems="center" justifyContent="center">
@@ -137,7 +137,7 @@ const PlayerProfile = () => {
       </Box>
 
       {/* Tab Content */}
-      <Paper sx={{ minHeight: 420, width: '100%', maxWidth: 700, mx: 'auto', p: 3 }}>
+      <Paper sx={{ minHeight: 420, width: '100%', maxWidth: 800, mx: 'auto', p: 3 }}>
         {tab === 0 && <ScoutIntel player={player} />}
         {tab === 1 && <Stats player={player} seasonLogs={allLogs} />}
         {tab === 2 && <Measurements player={player} />}

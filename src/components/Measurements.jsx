@@ -211,7 +211,7 @@ const Measurements = ({ player }) => {
                             height: circleWidth,
                             borderRadius: '50%',
                             background: getBarColor(percentile),
-                            border: '3px solid #fff',
+                            border: '1.5px solid black',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
